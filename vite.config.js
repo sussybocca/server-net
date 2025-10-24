@@ -4,9 +4,16 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   build: {
+    target: "esnext", // avoid transpiling
     rollupOptions: {
-      // Ignore native modules that cause Netlify builds to fail
-      external: ["fsevents", "fs", "path", "os", "child_process"],
+      external: [
+        "fsevents",
+        "fs",
+        "path",
+        "os",
+        "child_process",
+        "module",
+      ],
     },
   },
 });
