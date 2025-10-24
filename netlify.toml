@@ -4,13 +4,17 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "18"  # Ensures createRequire is available for Vite
+
 [dev]
   command = "npm run dev"
   port = 5173
   publish = "dist"
 
-# Redirect SPA routes to index.html
+# Redirect all SPA routes to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
