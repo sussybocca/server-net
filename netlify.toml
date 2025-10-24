@@ -3,16 +3,14 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  functions = "netlify/functions"
 
 [dev]
   command = "npm run dev"
   port = 5173
   publish = "dist"
-  functions = "netlify/functions"
 
-# Redirect all /api/* calls to Netlify Functions
+# Redirect SPA routes to index.html
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200

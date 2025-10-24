@@ -1,25 +1,37 @@
-import React, { useEffect, useRef } from "react";
-import * as monaco from "monaco-editor";
+import { useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
+import localforage from "localforage";
 
-const Editor = ({ value, language = "javascript", onChange }) => {
-  const editorRef = useRef();
+export default function CodeEditor({ onBuild }) {
+  const [code, setCode] = useState("");
 
   useEffect(() => {
-    const editor = monaco.editor.create(editorRef.current, {
-      value: value || "",
-      language,
-      theme: "vs-dark",
-      automaticLayout: true
-    });
-
-    editor.onDidChangeModelContent(() => {
-      onChange && onChange(editor.getValue());
-    });
-
-    return () => editor.dispose();
+    (async () => {
+      const saved = await localforage.getItem("userCode");
+      if (saved) setCode(saved);
+    })();
   }, []);
 
-  return <div ref={editorRef} style={{ height: "400px", width: "100%" }}></div>;
-};
+  const handleChange = (value) => {
+    setCode(value);
+    localforage.setItem("userCode", value);
+  };
 
-export default Editor;
+  return (
+    <div className="flex flex-col h-full">
+      <Editor
+        height="70vh"
+        language="javascript"
+        value={code}
+        onChange={handleChange}
+        theme="vs-dark"
+      />
+      <button
+        className="bg-blue-600 text-white mt-2 rounded p-2"
+        onClick={() => onBuild(code)}
+      >
+        Build & Run
+      </button>
+    </div>
+  );
+}
